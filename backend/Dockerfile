@@ -1,8 +1,10 @@
-FROM php:8.2-apache
+FROM php:8.2-apache-bookworm
 
 RUN apt-get update && apt-get install -y \
     libpq-dev \
     libzip-dev \
+    libonig-dev \
+    zlib1g-dev \
     unzip \
     git \
     curl \
@@ -40,8 +42,12 @@ RUN mkdir -p \
     storage/framework/views \
     storage/logs \
     bootstrap/cache \
-    && chown -R www-data:www-data storage bootstrap/cache \
-    && chmod -R 775 storage bootstrap/cache
+    && chown -R www-data:www-data \
+        storage \
+        bootstrap/cache \
+    && chmod -R 775 \
+        storage \
+        bootstrap/cache
 
 EXPOSE 80
 
