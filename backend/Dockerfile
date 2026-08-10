@@ -1,8 +1,13 @@
 FROM php:8.2-apache-bookworm
 
-RUN apt-get update && apt-get install -y libpq-dev libzip-dev libonig-dev zlib1g-dev unzip git curl nodejs npm && docker-php-ext-install pdo_pgsql mbstring bcmath zip && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y libpq-dev libzip-dev libonig-dev zlib1g-dev unzip git curl && docker-php-ext-install pdo_pgsql mbstring bcmath zip && rm -rf /var/lib/apt/lists/*
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+COPY --from=node:22-bookworm /usr/local/bin/node /usr/local/bin/node
+COPY --from=node:22-bookworm /usr/local/lib/node_modules /usr/local/lib/node_modules
+
+RUN ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm
 
 RUN a2enmod rewrite
 
