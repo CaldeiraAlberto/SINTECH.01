@@ -15,22 +15,30 @@ return Application::configure(basePath: dirname(__DIR__))
 
         /*
         |--------------------------------------------------------------------------
+        | Proxy / HTTPS - Render
+        |--------------------------------------------------------------------------
+        |
+        | O Render termina o HTTPS no proxy e encaminha a requisição
+        | para o container. O Laravel precisa confiar nesse proxy para
+        | reconhecer corretamente o esquema HTTPS original.
+        |
+        */
+
+        $middleware->trustProxies(at: '*');
+
+        /*
+        |--------------------------------------------------------------------------
         | Middleware Personalizados
         |--------------------------------------------------------------------------
         */
 
         $middleware->alias([
-
             'role' => \App\Http\Middleware\RoleMiddleware::class,
-
         ]);
-
     })
 
     ->withExceptions(function (Exceptions $exceptions): void {
-
         //
-
     })
 
     ->create();
