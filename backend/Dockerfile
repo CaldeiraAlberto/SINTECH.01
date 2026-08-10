@@ -1,6 +1,5 @@
 FROM php:8.2-apache
 
-# Extensões necessárias para Laravel e PostgreSQL
 RUN apt-get update && apt-get install -y \
     libpq-dev \
     libzip-dev \
@@ -14,10 +13,8 @@ RUN apt-get update && apt-get install -y \
         zip \
     && rm -rf /var/lib/apt/lists/*
 
-# Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Configurar Apache para Laravel
 RUN a2enmod rewrite
 
 ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
@@ -30,28 +27,21 @@ RUN sed -ri \
 
 WORKDIR /var/www/html
 
-# Copiar aplicação
 COPY . .
 
-# Instalar dependências PHP
 RUN composer install \
     --no-dev \
     --optimize-autoloader \
     --no-interaction
 
-# Permissões do Laravel
 RUN mkdir -p \
     storage/framework/cache \
     storage/framework/sessions \
     storage/framework/views \
     storage/logs \
     bootstrap/cache \
-    && chown -R www-data:www-data \
-        storage \
-        bootstrap/cache \
-    && chmod -R 775 \
-        storage \
-        bootstrap/cache
+    && chown -R www-data:www-data storage bootstrap/cache \
+    && chmod -R 775 storage bootstrap/cache
 
 EXPOSE 80
 
