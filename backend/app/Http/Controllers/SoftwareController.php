@@ -1,8 +1,11 @@
 <?php
+
 namespace App\Http\Controllers;
+
 use App\Models\Software;
 use App\Models\Installation; // <--- Importado o Model Installation
 use Illuminate\Http\Request;
+
 class SoftwareController extends Controller
 {
     /**
@@ -12,6 +15,7 @@ class SoftwareController extends Controller
     {
         $user = auth()->user();
         $pesquisa = $request->input('pesquisa');
+
         $installations = Installation::with(['computer', 'software'])
             ->where(function ($query) use ($user) {
                 $query->where('responsavel_id', $user->id)
@@ -28,14 +32,17 @@ class SoftwareController extends Controller
             ->latest('data_instalacao')
             ->paginate(10)
             ->withQueryString();
+
         return view('softwares.my_softwares', compact('installations', 'pesquisa'));
     }
+
     /**
      * Lista todos os softwares.
      */
     public function index(Request $request)
     {
         $pesquisa = $request->input('pesquisa');
+
         /*
         |--------------------------------------------------------------------------
         | Colunas permitidas para ordenação
@@ -49,12 +56,14 @@ class SoftwareController extends Controller
             'estado',
             'created_at',
         ];
+
         $ordem = in_array(
             $request->input('ordem'),
             $colunasPermitidas
         )
             ? $request->input('ordem')
             : 'nome';
+
         /*
         |--------------------------------------------------------------------------
         | Consulta
@@ -73,12 +82,14 @@ class SoftwareController extends Controller
             ->orderBy($ordem)
             ->paginate(10)
             ->withQueryString();
+
         return view('softwares.index', compact(
             'softwares',
             'pesquisa',
             'ordem'
         ));
     }
+
     /**
      * Formulário de cadastro.
      */
@@ -86,6 +97,7 @@ class SoftwareController extends Controller
     {
         return view('softwares.create');
     }
+
     /**
      * Guarda um novo software.
      */
@@ -100,11 +112,14 @@ class SoftwareController extends Controller
             'estado' => 'required|in:Ativo,Expirado,Descontinuado',
             'observacoes' => 'nullable|string',
         ]);
+
         Software::create($dadosValidados);
+
         return redirect()
             ->route('softwares.index')
             ->with('success', 'Software registado com sucesso.');
     }
+
     /**
      * Formulário de edição.
      */
@@ -113,12 +128,14 @@ class SoftwareController extends Controller
         $software = Software::findOrFail($id);
         return view('softwares.edit', compact('software'));
     }
+
     /**
      * Atualiza um software.
      */
     public function update(Request $request, $id)
     {
         $software = Software::findOrFail($id);
+
         $dadosValidados = $request->validate([
             'nome' => 'required|string|max:150',
             'versao' => 'required|string|max:50',
@@ -128,11 +145,14 @@ class SoftwareController extends Controller
             'estado' => 'required|in:Ativo,Expirado,Descontinuado',
             'observacoes' => 'nullable|string',
         ]);
+
         $software->update($dadosValidados);
+
         return redirect()
             ->route('softwares.index')
             ->with('success', 'Software atualizado com sucesso.');
     }
+
     /**
      * Elimina um software.
      */
@@ -140,8 +160,32 @@ class SoftwareController extends Controller
     {
         $software = Software::findOrFail($id);
         $software->delete();
+
         return redirect()
             ->route('softwares.index')
             ->with('success', 'Software eliminado com sucesso.');
+    }
+
+    /**
+     * Elimina vários softwares selecionados em massa.
+     */
+    public function bulkDelete(Request $request)
+    {
+        $request->validate([
+            'ids'   => 'required|array|min:1',
+            'ids.*' => 'exists:softwares,id',
+        ], [
+            'ids.required' => 'Por favor, selecione pelo menos um software para eliminar.',
+            'ids.array'    => 'Formato de seleção inválido.',
+            'ids.*.exists' => 'Um ou mais softwares selecionados não foram encontrados.',
+        ]);
+
+        $ids = $request->input('ids', []);
+
+        $count = Software::whereIn('id', $ids)->delete();
+
+        return redirect()
+            ->route('softwares.index')
+            ->with('success', "{$count} software(s) eliminado(s) com sucesso.");
     }
 }

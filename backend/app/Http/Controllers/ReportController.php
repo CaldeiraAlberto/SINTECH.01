@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Http\Controllers;
+
 use App\Models\Computer;
 use App\Models\Installation;
 use App\Models\Retirement;
@@ -7,108 +9,116 @@ use App\Models\Software;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+
 class ReportController extends Controller
 {
     /**
-     * Apresenta o relatório geral do sistema na web.
+     * Display the system general report on the web.
      */
     public function index(Request $request)
     {
-        $pesquisa = $request->input('pesquisa');
+        $search = $request->input('search') ?? $request->input('pesquisa');
+
         /*
         |--------------------------------------------------------------------------
-        | Estatísticas gerais
+        | General Statistics
         |--------------------------------------------------------------------------
         */
-        $totalComputadores = Computer::count();
+        $totalComputers = Computer::count();
         $totalSoftwares = Software::count();
-        $totalInstalacoes = Installation::count();
-        $totalAposentacoes = Retirement::count();
-        $totalUtilizadores = User::count();
+        $totalInstallations = Installation::count();
+        $totalRetirements = Retirement::count();
+        $totalUsers = User::count();
+
         /*
         |--------------------------------------------------------------------------
-        | Computadores por responsável
+        | Computers by Responsible User
         |--------------------------------------------------------------------------
         */
-        $computadoresPorResponsavel = Computer::with('responsavel')
+        $computersByResponsible = Computer::with('responsavel')
             ->get()
             ->groupBy(function ($computer) {
                 return $computer->responsavel?->name ?? 'Sem responsável';
             });
+
         /*
         |--------------------------------------------------------------------------
-        | Instalações recentes
+        | Recent Installations
         |--------------------------------------------------------------------------
         */
-        $instalacoes = Installation::with([
+        $installations = Installation::with([
                 'computer.responsavel',
                 'software',
             ])
-            ->when($pesquisa, function ($query) use ($pesquisa) {
-                $query->where(function ($q) use ($pesquisa) {
-                    $q->where('instalado_por', 'ILIKE', "%{$pesquisa}%")
-                        ->orWhere('estado', 'ILIKE', "%{$pesquisa}%")
-                        ->orWhereHas('computer', function ($computer) use ($pesquisa) {
+            ->when($search, function ($query) use ($search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('instalado_por', 'ILIKE', "%{$search}%")
+                        ->orWhere('estado', 'ILIKE', "%{$search}%")
+                        ->orWhereHas('computer', function ($computer) use ($search) {
                             $computer
-                                ->where('plaqueta', 'ILIKE', "%{$pesquisa}%")
-                                ->orWhere('modelo_cpu', 'ILIKE', "%{$pesquisa}%");
+                                ->where('plaqueta', 'ILIKE', "%{$search}%")
+                                ->orWhere('modelo_cpu', 'ILIKE', "%{$search}%");
                         })
-                        ->orWhereHas('software', function ($software) use ($pesquisa) {
+                        ->orWhereHas('software', function ($software) use ($search) {
                             $software
-                                ->where('nome', 'ILIKE', "%{$pesquisa}%")
-                                ->orWhere('fabricante', 'ILIKE', "%{$pesquisa}%");
+                                ->where('nome', 'ILIKE', "%{$search}%")
+                                ->orWhere('fabricante', 'ILIKE', "%{$search}%");
                         });
                 });
             })
             ->latest('data_instalacao')
             ->paginate(10)
             ->withQueryString();
+
         /*
         |--------------------------------------------------------------------------
-        | Aposentações
+        | Retirements
         |--------------------------------------------------------------------------
         */
-        $aposentacoes = Retirement::with([
+        $retirements = Retirement::with([
                 'computer.responsavel',
             ])
             ->latest('data_aposentacao')
             ->take(10)
             ->get();
+
         /*
         |--------------------------------------------------------------------------
-        | Renderizar View Web
+        | Render Web View
         |--------------------------------------------------------------------------
         */
         return view('reports.index', compact(
-            'totalComputadores',
+            'totalComputers',
             'totalSoftwares',
-            'totalInstalacoes',
-            'totalAposentacoes',
-            'totalUtilizadores',
-            'computadoresPorResponsavel',
-            'instalacoes',
-            'aposentacoes',
-            'pesquisa'
+            'totalInstallations',
+            'totalRetirements',
+            'totalUsers',
+            'computersByResponsible',
+            'installations',
+            'retirements',
+            'search'
         ));
     }
+
     /**
-     * Gera e descarrega o relatório geral em PDF.
+     * Generate and download the general report in PDF.
      */
     public function pdf()
     {
-        $dataRelatorio = now();
-        $totalComputadores = Computer::count();
-        $totalAposentados = Retirement::count();
-        $computadoresAtivos = Computer::whereDoesntHave('retirement')->count();
-        $computadoresAtribuidos = Computer::whereNotNull('responsavel_id')->whereDoesntHave('retirement')->count();
-        $computadoresDisponiveis = Computer::whereNull('responsavel_id')->whereDoesntHave('retirement')->count();
-        $totalResponsaveis = User::where('role', 'responsavel')->count();
+        $reportDate = now();
+        $totalComputers = Computer::count();
+        $totalRetirements = Retirement::count();
+        $activeComputers = Computer::whereDoesntHave('retirement')->count();
+        $assignedComputers = Computer::whereNotNull('responsavel_id')->whereDoesntHave('retirement')->count();
+        $availableComputers = Computer::whereNull('responsavel_id')->whereDoesntHave('retirement')->count();
+        $totalResponsibles = User::where('role', 'responsavel')->count();
         $totalSoftwares = Software::count();
-        $totalInstalacoes = Installation::count();
-        $instalacoesInstaladas = Installation::where('estado', 'Instalado')->count();
-        $instalacoesAtualizadas = Installation::where('estado', 'Atualizado')->count();
-        $instalacoesRemovidas = Installation::where('estado', 'Removido')->count();
-        $computadoresPorResponsavel = User::where('role', 'responsavel')
+        $totalInstallations = Installation::count();
+        $installedInstallations = Installation::where('estado', 'Instalado')->count();
+        $updatedInstallations = Installation::where('estado', 'Atualizado')->count();
+        $removedInstallations = Installation::where('estado', 'Removido')->count();
+
+        $computersByResponsible = User::where('role', 'responsavel')
             ->withCount([
                 'computers' => function ($query) {
                     $query->whereDoesntHave('retirement');
@@ -116,12 +126,14 @@ class ReportController extends Controller
             ])
             ->orderBy('name')
             ->get();
-        $softwaresMaisInstalados = Software::withCount('installations')
+
+        $topInstalledSoftwares = Software::withCount('installations')
             ->orderByDesc('installations_count')
             ->orderBy('nome')
             ->take(10)
             ->get();
-        $instalacoesRecentes = Installation::with([
+
+        $recentInstallations = Installation::with([
             'computer',
             'computer.responsavel',
             'software',
@@ -130,34 +142,37 @@ class ReportController extends Controller
         ->latest('data_instalacao')
         ->take(10)
         ->get();
-        $aposentacoesRecentes = Retirement::with([
+
+        $recentRetirements = Retirement::with([
             'computer',
             'computer.responsavel',
         ])
         ->latest('data_aposentacao')
         ->take(10)
         ->get();
+
         $pdf = Pdf::loadView(
             'reports.pdf',
             compact(
-                'dataRelatorio',
-                'totalComputadores',
-                'computadoresAtivos',
-                'computadoresAtribuidos',
-                'computadoresDisponiveis',
-                'totalResponsaveis',
+                'reportDate',
+                'totalComputers',
+                'activeComputers',
+                'assignedComputers',
+                'availableComputers',
+                'totalResponsibles',
                 'totalSoftwares',
-                'totalInstalacoes',
-                'instalacoesInstaladas',
-                'instalacoesAtualizadas',
-                'instalacoesRemovidas',
-                'totalAposentados',
-                'computadoresPorResponsavel',
-                'softwaresMaisInstalados',
-                'instalacoesRecentes',
-                'aposentacoesRecentes'
+                'totalInstallations',
+                'installedInstallations',
+                'updatedInstallations',
+                'removedInstallations',
+                'totalRetirements',
+                'computersByResponsible',
+                'topInstalledSoftwares',
+                'recentInstallations',
+                'recentRetirements'
             )
         );
+
         return $pdf->download(
             'relatorio-geral-sintech-' . now()->format('Y-m-d_H-i') . '.pdf'
         );

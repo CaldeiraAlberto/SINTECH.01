@@ -92,34 +92,36 @@
     <!-- Cabeçalho -->
     <div class="header">
         <h1>SinTech — Relatório Geral de TI</h1>
-        <p>Emitido em: {{ \Carbon\Carbon::parse($dataRelatorio)->format('d/m/Y H:i') }}</p>
+        <p>Emitido em: {{ \Carbon\Carbon::parse($reportDate ?? now())->format('d/m/Y H:i') }}</p>
     </div>
+
     <!-- Indicadores -->
     <div class="section-title">Resumo do Inventário</div>
     <table class="stats-grid">
         <tr>
             <td class="stats-box">
-                <div class="number">{{ $totalComputadores }}</div>
+                <div class="number">{{ $totalComputers ?? 0 }}</div>
                 <div class="label">Computadores</div>
             </td>
             <td class="stats-box">
-                <div class="number">{{ $computadoresAtivos }}</div>
+                <div class="number">{{ $activeComputers ?? 0 }}</div>
                 <div class="label">Ativos</div>
             </td>
             <td class="stats-box">
-                <div class="number">{{ $totalSoftwares }}</div>
+                <div class="number">{{ $totalSoftwares ?? 0 }}</div>
                 <div class="label">Softwares</div>
             </td>
             <td class="stats-box">
-                <div class="number">{{ $totalInstalacoes }}</div>
+                <div class="number">{{ $totalInstallations ?? 0 }}</div>
                 <div class="label">Instalações</div>
             </td>
             <td class="stats-box">
-                <div class="number">{{ $totalAposentados }}</div>
+                <div class="number">{{ $totalRetirements ?? 0 }}</div>
                 <div class="label">Aposentados</div>
             </td>
         </tr>
     </table>
+
     <!-- Tabela Softwares Mais Instalados -->
     <div class="section-title">Top Softwares Instalados</div>
     <table>
@@ -132,17 +134,22 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($softwaresMaisInstalados as $sw)
+            @forelse($topInstalledSoftwares as $sw)
                 <tr>
-                    <td><strong>{{ $sw->nome }}</strong> ({{ $sw->versao }})</td>
-                    <td>{{ $sw->fabricante }}</td>
-                    <td>{{ $sw->tipo }}</td>
+                    <td><strong>{{ $sw->name ?? $sw->nome }}</strong> ({{ $sw->version ?? $sw->versao }})</td>
+                    <td>{{ $sw->manufacturer ?? $sw->fabricante }}</td>
+                    <td>{{ $sw->type ?? $sw->tipo }}</td>
                     <td style="text-align: center;"><strong>{{ $sw->installations_count }}</strong></td>
                 </tr>
-            @endforeach
+            @empty
+                <tr>
+                    <td colspan="4" style="text-align: center;">Nenhum software registado.</td>
+                </tr>
+            @endforelse
         </tbody>
     </table>
-    <!-- Tabela Últtimas Instalações -->
+
+    <!-- Tabela Últimas Instalações -->
     <div class="section-title">Instalações Recentes</div>
     <table>
         <thead>
@@ -155,21 +162,24 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($instalacoesRecentes as $inst)
+            @forelse($recentInstallations as $inst)
                 <tr>
-                    <td>{{ $inst->computer->plaqueta ?? 'N/A' }}</td>
-                    <td>{{ $inst->software->nome ?? 'N/A' }}</td>
-                    <td>{{ $inst->computer->responsavel->name ?? 'Sem responsável' }}</td>
-                    <td>{{ $inst->instalado_por }}</td>
-                    <td>{{ \Carbon\Carbon::parse($inst->data_instalacao)->format('d/m/Y') }}</td>
+                    <td>{{ $inst->computer->plaqueta ?? $inst->computer->tag ?? 'N/A' }}</td>
+                    <td>{{ $inst->software->name ?? $inst->software->nome ?? 'N/A' }}</td>
+                    <td>{{ $inst->computer->responsavel->name ?? $inst->computer->responsible->name ?? 'Sem responsável' }}</td>
+                    <td>{{ $inst->installed_by ?? $inst->instalado_por }}</td>
+                    <td>{{ \Carbon\Carbon::parse($inst->installation_date ?? $inst->data_instalacao)->format('d/m/Y') }}</td>
                 </tr>
-            @endforeach
+            @empty
+                <tr>
+                    <td colspan="5" style="text-align: center;">Nenhuma instalação encontrada.</td>
+                </tr>
+            @endforelse
         </tbody>
     </table>
+
     <div class="footer">
         SinTech — Sistema de Informação para o Registo e Gestão dos Softwares
     </div>
 </body>
 </html>
-
-

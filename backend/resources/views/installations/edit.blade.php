@@ -5,52 +5,35 @@
 @section('content')
 
 <div class="card-header bg-warning">
-
-    <h4 class="mb-0">
+    <h4 class="mb-0 text-dark">
         <i class="bi bi-pencil-square me-2"></i>
         Editar Instalação
     </h4>
-
 </div>
 
 <div class="card-body">
 
     {{-- Erros de Validação --}}
     @if($errors->any())
-
         <div class="alert alert-danger mb-4">
-
             <strong>Foram encontrados os seguintes erros:</strong>
-
             <ul class="mb-0 mt-2">
-
                 @foreach($errors->all() as $error)
-
                     <li>{{ $error }}</li>
-
                 @endforeach
-
             </ul>
-
         </div>
-
     @endif
 
-
     {{-- Formulário --}}
-    <form
-        action="{{ route('installations.update', $installation->id) }}"
-        method="POST">
-
+    <form action="{{ route('installations.update', $installation->id) }}" method="POST">
         @csrf
-
         @method('PUT')
 
         <div class="row">
 
             {{-- Computador --}}
             <div class="col-md-6 mb-3">
-
                 <label for="computer_id" class="form-label">
                     Computador
                 </label>
@@ -66,88 +49,24 @@
                     </option>
 
                     @foreach($computers as $computer)
-
                         <option
                             value="{{ $computer->id }}"
-                            @selected(
-                                old(
-                                    'computer_id',
-                                    $installation->computer_id
-                                ) == $computer->id
-                            )>
-
-                            {{ $computer->plaqueta }} -
-                            {{ $computer->modelo_cpu }}
-
+                            @selected(old('computer_id', $installation->computer_id) == $computer->id)>
+                            {{ $computer->plaqueta }} - {{ $computer->modelo_cpu }}
+                            (Resp: {{ $computer->responsavel->name ?? 'Sem responsável' }})
                         </option>
-
                     @endforeach
-
                 </select>
 
                 @error('computer_id')
-
                     <div class="invalid-feedback">
                         {{ $message }}
                     </div>
-
                 @enderror
-
             </div>
-
-
-            {{-- Responsável --}}
-            <div class="col-md-6 mb-3">
-
-                <label for="responsavel_id" class="form-label">
-                    Responsável pelo Computador
-                </label>
-
-                <select
-                    id="responsavel_id"
-                    name="responsavel_id"
-                    class="form-select @error('responsavel_id') is-invalid @enderror"
-                    required>
-
-                    <option value="">
-                        Selecione o responsável...
-                    </option>
-
-                    @foreach($responsaveis as $responsavel)
-
-                        <option
-                            value="{{ $responsavel->id }}"
-                            @selected(
-                                old(
-                                    'responsavel_id',
-                                    $installation->responsavel_id
-                                ) == $responsavel->id
-                            )>
-
-                            {{ $responsavel->name }}
-                            -
-                            {{ $responsavel->numero_cracha }}
-
-                        </option>
-
-                    @endforeach
-
-                </select>
-
-                @error('responsavel_id')
-
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
-
-                @enderror
-
-            </div>
-
 
             {{-- Software --}}
             <div class="col-md-6 mb-3">
-
                 <label for="software_id" class="form-label">
                     Software
                 </label>
@@ -163,38 +82,23 @@
                     </option>
 
                     @foreach($softwares as $software)
-
                         <option
                             value="{{ $software->id }}"
-                            @selected(
-                                old(
-                                    'software_id',
-                                    $installation->software_id
-                                ) == $software->id
-                            )>
-
+                            @selected(old('software_id', $installation->software_id) == $software->id)>
                             {{ $software->nome }}
-
                         </option>
-
                     @endforeach
-
                 </select>
 
                 @error('software_id')
-
                     <div class="invalid-feedback">
                         {{ $message }}
                     </div>
-
                 @enderror
-
             </div>
-
 
             {{-- Data da Instalação --}}
             <div class="col-md-6 mb-3">
-
                 <label for="data_instalacao" class="form-label">
                     Data da Instalação
                 </label>
@@ -208,19 +112,14 @@
                     required>
 
                 @error('data_instalacao')
-
                     <div class="invalid-feedback">
                         {{ $message }}
                     </div>
-
                 @enderror
-
             </div>
-
 
             {{-- Instalado por --}}
             <div class="col-md-6 mb-3">
-
                 <label for="instalado_por" class="form-label">
                     Instalado por
                 </label>
@@ -235,19 +134,14 @@
                     required>
 
                 @error('instalado_por')
-
                     <div class="invalid-feedback">
                         {{ $message }}
                     </div>
-
                 @enderror
-
             </div>
-
 
             {{-- Estado --}}
             <div class="col-md-6 mb-3">
-
                 <label for="estado" class="form-label">
                     Estado
                 </label>
@@ -260,59 +154,32 @@
 
                     <option
                         value="Instalado"
-                        @selected(
-                            old(
-                                'estado',
-                                $installation->estado
-                            ) == 'Instalado'
-                        )>
-
+                        @selected(old('estado', $installation->estado) == 'Instalado')>
                         Instalado
-
                     </option>
 
                     <option
                         value="Atualizado"
-                        @selected(
-                            old(
-                                'estado',
-                                $installation->estado
-                            ) == 'Atualizado'
-                        )>
-
+                        @selected(old('estado', $installation->estado) == 'Atualizado')>
                         Atualizado
-
                     </option>
 
                     <option
                         value="Removido"
-                        @selected(
-                            old(
-                                'estado',
-                                $installation->estado
-                            ) == 'Removido'
-                        )>
-
+                        @selected(old('estado', $installation->estado) == 'Removido')>
                         Removido
-
                     </option>
-
                 </select>
 
                 @error('estado')
-
                     <div class="invalid-feedback">
                         {{ $message }}
                     </div>
-
                 @enderror
-
             </div>
-
 
             {{-- Observações --}}
             <div class="col-12 mb-3">
-
                 <label for="observacoes" class="form-label">
                     Observações
                 </label>
@@ -325,42 +192,29 @@
                     placeholder="Observações adicionais sobre a instalação...">{{ old('observacoes', $installation->observacoes) }}</textarea>
 
                 @error('observacoes')
-
                     <div class="invalid-feedback">
                         {{ $message }}
                     </div>
-
                 @enderror
-
             </div>
 
         </div>
 
-
         {{-- Botões --}}
         <div class="d-flex justify-content-between mt-3">
-
             <a
                 href="{{ route('installations.index') }}"
                 class="btn btn-secondary">
-
                 <i class="bi bi-arrow-left-circle me-1"></i>
-
                 Voltar
-
             </a>
-
 
             <button
                 type="submit"
                 class="btn btn-warning">
-
                 <i class="bi bi-save-fill me-1"></i>
-
                 Atualizar Instalação
-
             </button>
-
         </div>
 
     </form>

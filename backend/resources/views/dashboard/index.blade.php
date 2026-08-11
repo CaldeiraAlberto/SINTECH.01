@@ -1,5 +1,7 @@
 @extends('layouts.app')
+
 @section('title', 'Dashboard')
+
 @section('content')
 {{-- Estilos para o Dashboard Moderno em Azul Escuro --}}
 <style>
@@ -49,6 +51,7 @@
         border: 1px solid rgba(15, 37, 71, 0.2);
     }
 </style>
+
 <div class="container-fluid py-2">
     <!-- 1. CABEÇALHO -->
     <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom border-light">
@@ -68,6 +71,7 @@
             </div>
         </div>
     </div>
+
     <!-- 2. OS 6 GRUPOS DE CARTÕES DE ESTATÍSTICA (KPIs) -->
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-6 g-3 mb-4">
         <!-- 1. Computadores -->
@@ -86,6 +90,7 @@
                 </div>
             </div>
         </div>
+
         <!-- 2. Utilizadores -->
         <div class="col">
             <div class="card card-modern border-0 shadow-sm stat-card bg-white h-100">
@@ -102,6 +107,7 @@
                 </div>
             </div>
         </div>
+
         <!-- 3. Softwares -->
         <div class="col">
             <div class="card card-modern border-0 shadow-sm stat-card bg-white h-100">
@@ -118,6 +124,7 @@
                 </div>
             </div>
         </div>
+
         <!-- 4. Instalações -->
         <div class="col">
             <div class="card card-modern border-0 shadow-sm stat-card bg-white h-100">
@@ -134,13 +141,14 @@
                 </div>
             </div>
         </div>
+
         <!-- 5. Aposentações -->
         <div class="col">
             <div class="card card-modern border-0 shadow-sm stat-card bg-white h-100">
                 <div class="card-body p-3 d-flex align-items-center justify-content-between">
                     <div>
                         <span class="text-muted text-uppercase fw-semibold d-block" style="font-size: 0.68rem; letter-spacing: 0.5px;">Aposentações</span>
-                        <h3 class="fw-bold mb-0 mt-1" style="color: #0f2547;">{{ $totalAposentacoes ?? 0 }}</h3>
+                        <h3 class="fw-bold mb-0 mt-1" style="color: #0f2547;">{{ $totalRetirements ?? 0 }}</h3>
                     </div>
                     <div class="icon-shape-navy">
                         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-archive-fill" viewBox="0 0 16 16">
@@ -150,13 +158,14 @@
                 </div>
             </div>
         </div>
+
         <!-- 6. Relatórios -->
         <div class="col">
             <div class="card card-modern border-0 shadow-sm stat-card bg-white h-100">
                 <div class="card-body p-3 d-flex align-items-center justify-content-between">
                     <div>
                         <span class="text-muted text-uppercase fw-semibold d-block" style="font-size: 0.68rem; letter-spacing: 0.5px;">Relatórios</span>
-                        <h3 class="fw-bold mb-0 mt-1" style="color: #0f2547;">{{ $totalRelatorios ?? 0 }}</h3>
+                        <h3 class="fw-bold mb-0 mt-1" style="color: #0f2547;">{{ $totalReports ?? 0 }}</h3>
                     </div>
                     <div class="icon-shape-navy">
                         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-file-earmark-bar-graph-fill" viewBox="0 0 16 16">
@@ -167,6 +176,7 @@
             </div>
         </div>
     </div>
+
     <!-- 3. CONTEÚDO PRINCIPAL (INFORMAÇÕES E RESUMO) -->
     <div class="row g-4">
         <!-- Informações do Utilizador -->
@@ -219,6 +229,7 @@
                 </div>
             </div>
         </div>
+
         <!-- Resumo do Sistema -->
         <div class="col-lg-4">
             <div class="card card-modern shadow-sm border-0 bg-white h-100">

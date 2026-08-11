@@ -6,10 +6,10 @@
 
 <div class="container-fluid py-3">
 
-    {{-- Cabeçalho --}}
+    {{-- Cabeçalho em Azul Escuro --}}
     <div class="card shadow-sm border-0">
 
-        <div class="card-header bg-navy-header py-3 px-4 d-flex justify-content-between align-items-center">
+        <div class="card-header py-3 px-4 d-flex justify-content-between align-items-center" style="background-color: #0f2038;">
 
             <div>
                 <h4 class="fw-bold mb-0 text-white">
@@ -63,8 +63,9 @@
                         value="{{ $pesquisa ?? '' }}">
 
                     <button
-                        class="btn btn-navy-submit"
-                        type="submit">
+                        class="btn text-white"
+                        type="submit"
+                        style="background-color: #0f2038;">
 
                         <i class="bi bi-search me-1"></i>
                         Pesquisar
