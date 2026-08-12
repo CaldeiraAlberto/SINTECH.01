@@ -11,10 +11,10 @@
 
     <meta
         name="description"
-        content="SinTechAI - Trabalho académico do 6.º Grupo, Mestrado em Sistemas de Informação">
+        content="SinTech - Sistema académico do 6.º Grupo, Mestrado em Sistemas de Informação">
 
     <title>
-        SinTechAI | Trabalho do 6.º Grupo
+        SinTech | Sistema Académico do 6.º Grupo
     </title>
 
 
@@ -1026,7 +1026,7 @@
             </span>
 
             <span>
-                SinTechAI
+                SinTech
             </span>
 
         </a>
@@ -1036,7 +1036,10 @@
             class="navbar-toggler border-0 text-white shadow-none"
             type="button"
             data-bs-toggle="collapse"
-            data-bs-target="#mainNavbar">
+            data-bs-target="#mainNavbar"
+            aria-controls="mainNavbar"
+            aria-expanded="false"
+            aria-label="Abrir menu">
 
             <i class="bi bi-list fs-2"></i>
 
@@ -1056,7 +1059,7 @@
                         class="nav-link"
                         href="#sobre">
 
-                        Sobre o Projecto
+                        Sobre o Sistema
 
                     </a>
 
@@ -1129,7 +1132,7 @@
 
 
 {{-- ============================================================= --}}
-{{-- HERO / APRESENTAÇÃO ACADÉMICA --}}
+{{-- HERO / APRESENTAÇÃO DO SISTEMA --}}
 {{-- ============================================================= --}}
 
 <section class="hero">
@@ -1149,7 +1152,7 @@
                     <i class="bi bi-mortarboard-fill"></i>
 
                     <span>
-                        TRABALHO ACADÉMICO • 6.º GRUPO
+                        SISTEMA ACADÉMICO • 6.º GRUPO
                     </span>
 
                 </div>
@@ -1158,6 +1161,7 @@
                 <h1>
 
                     Sistema de Gestão de
+
                     <span>
                         Computadores e Softwares
                     </span>
@@ -1167,9 +1171,7 @@
 
                 <p class="hero-description">
 
-                    Trabalho académico submetido à
-                    <strong>Academia Militar</strong>,
-                    no âmbito do módulo de
+                    Sistema académico desenvolvido no âmbito do módulo de
                     <strong>
                         Desenvolvimento de Sistemas de Informação
                         e Web Semântica
@@ -1177,7 +1179,8 @@
                     como requisito de avaliação do
                     <strong>
                         Curso de Mestrado em Sistemas de Informação
-                    </strong>.
+                    </strong>,
+                    submetido à <strong>Academia Militar</strong>.
 
                 </p>
 
@@ -1237,7 +1240,7 @@
 
                             <h5 class="fw-bold mb-0 text-white">
 
-                                Trabalho do 6.º Grupo
+                                Sistema Académico do 6.º Grupo
 
                             </h5>
 
@@ -1334,7 +1337,7 @@
 
 
 {{-- ============================================================= --}}
-{{-- SOBRE O PROJECTO --}}
+{{-- SOBRE O SISTEMA --}}
 {{-- ============================================================= --}}
 
 <section
@@ -1349,7 +1352,7 @@
 
 
             <span class="badge-tag">
-                O PROJECTO
+                O SISTEMA
             </span>
 
 
@@ -1360,7 +1363,7 @@
 
             <p>
 
-                O SinTechAI é um sistema de gestão desenvolvido
+                O SinTech é um sistema de gestão desenvolvido
                 para organizar informações relacionadas com
                 computadores, softwares, instalações, utilizadores
                 e suporte técnico.
@@ -1473,7 +1476,7 @@
 
 
             <h2>
-                O que o SinTechAI permite fazer?
+                O que o SinTech permite fazer?
             </h2>
 
 
@@ -1783,7 +1786,7 @@
 
             <p>
 
-                O sistema integra os principais elementos
+                O SinTech integra os principais elementos
                 da gestão tecnológica numa única plataforma.
 
             </p>
@@ -1935,7 +1938,7 @@
 
 
             <span class="badge-tag">
-                TRABALHO DO 6.º GRUPO
+                SISTEMA ACADÉMICO DO 6.º GRUPO
             </span>
 
 
@@ -1946,10 +1949,10 @@
 
             <p>
 
-                Trabalho académico submetido à Academia Militar,
-                no âmbito do módulo de Desenvolvimento de Sistemas
-                de Informação e Web Semântica, como requisito de
-                avaliação do Curso de Mestrado em Sistemas de Informação.
+                Sistema desenvolvido pelo 6.º Grupo no âmbito do módulo
+                de Desenvolvimento de Sistemas de Informação e Web
+                Semântica, como requisito de avaliação do Curso de
+                Mestrado em Sistemas de Informação.
 
             </p>
 
@@ -2096,7 +2099,7 @@
 
             <p class="text-white-50">
 
-                Entre no SinTechAI para gerir computadores,
+                Entre no SinTech para gerir computadores,
                 softwares, instalações, aposentações e relatórios.
 
             </p>
@@ -2109,7 +2112,7 @@
                 <i class="bi bi-box-arrow-in-right"></i>
 
                 <span>
-                    Entrar no SinTechAI
+                    Entrar no SinTech
                 </span>
 
             </a>
@@ -2142,14 +2145,14 @@
 
                 <span class="fw-bold text-white">
 
-                    SinTechAI
+                    SinTech
 
                 </span>
 
 
                 <span class="ms-2">
 
-                    | Trabalho do 6.º Grupo
+                    | Sistema académico do 6.º Grupo
 
                 </span>
 
@@ -2186,8 +2189,8 @@
 
         <div class="text-center mt-3">
 
-            © {{ date('Y') }} SinTechAI —
-            Trabalho académico do 6.º Grupo.
+            © {{ date('Y') }} SinTech —
+            Sistema académico do 6.º Grupo.
 
         </div>
 

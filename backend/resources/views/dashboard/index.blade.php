@@ -3,18 +3,17 @@
 @section('title', 'Dashboard')
 
 @section('content')
-{{-- Estilos para o Dashboard Moderno em Azul Escuro --}}
 <style>
     :root {
         --navy-dark: #0f2547;
         --navy-primary: #1e3e70;
     }
     
-    /* Efeito nos cartões de estatísticas */
     .stat-card {
         transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         border-radius: 0.85rem !important;
         border: 1px solid #e2e8f0 !important;
+        position: relative;
     }
     
     .stat-card:hover {
@@ -23,7 +22,6 @@
         border-color: #cbd5e1 !important;
     }
     
-    /* Formato do ícone nos cartões */
     .icon-shape-navy {
         width: 48px;
         height: 48px;
@@ -53,7 +51,7 @@
 </style>
 
 <div class="container-fluid py-2">
-    <!-- 1. CABEÇALHO -->
+    {{-- CABEÇALHO --}}
     <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom border-light">
         <div>
             <h2 class="fw-bold mb-1" style="color: #0f2547;">Dashboard</h2>
@@ -72,15 +70,16 @@
         </div>
     </div>
 
-    <!-- 2. OS 6 GRUPOS DE CARTÕES DE ESTATÍSTICA (KPIs) -->
+    {{-- CARTÕES KPIs INTERATIVOS --}}
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-6 g-3 mb-4">
-        <!-- 1. Computadores -->
+        {{-- Computadores --}}
         <div class="col">
             <div class="card card-modern border-0 shadow-sm stat-card bg-white h-100">
                 <div class="card-body p-3 d-flex align-items-center justify-content-between">
                     <div>
                         <span class="text-muted text-uppercase fw-semibold d-block" style="font-size: 0.68rem; letter-spacing: 0.5px;">Computadores</span>
                         <h3 class="fw-bold mb-0 mt-1" style="color: #0f2547;">{{ $totalComputers }}</h3>
+                        <a href="{{ route('computers.index') }}" class="stretched-link"></a>
                     </div>
                     <div class="icon-shape-navy">
                         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-pc-display" viewBox="0 0 16 16">
@@ -91,13 +90,14 @@
             </div>
         </div>
 
-        <!-- 2. Utilizadores -->
+        {{-- Utilizadores --}}
         <div class="col">
             <div class="card card-modern border-0 shadow-sm stat-card bg-white h-100">
                 <div class="card-body p-3 d-flex align-items-center justify-content-between">
                     <div>
                         <span class="text-muted text-uppercase fw-semibold d-block" style="font-size: 0.68rem; letter-spacing: 0.5px;">Utilizadores</span>
                         <h3 class="fw-bold mb-0 mt-1" style="color: #0f2547;">{{ $totalUsers }}</h3>
+                        <a href="{{ route('users.index') }}" class="stretched-link"></a>
                     </div>
                     <div class="icon-shape-navy">
                         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">
@@ -108,13 +108,14 @@
             </div>
         </div>
 
-        <!-- 3. Softwares -->
+        {{-- Softwares --}}
         <div class="col">
             <div class="card card-modern border-0 shadow-sm stat-card bg-white h-100">
                 <div class="card-body p-3 d-flex align-items-center justify-content-between">
                     <div>
                         <span class="text-muted text-uppercase fw-semibold d-block" style="font-size: 0.68rem; letter-spacing: 0.5px;">Softwares</span>
                         <h3 class="fw-bold mb-0 mt-1" style="color: #0f2547;">{{ $totalSoftwares }}</h3>
+                        <a href="{{ route('softwares.index') }}" class="stretched-link"></a>
                     </div>
                     <div class="icon-shape-navy">
                         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-disc-fill" viewBox="0 0 16 16">
@@ -125,13 +126,14 @@
             </div>
         </div>
 
-        <!-- 4. Instalações -->
+        {{-- Instalações --}}
         <div class="col">
             <div class="card card-modern border-0 shadow-sm stat-card bg-white h-100">
                 <div class="card-body p-3 d-flex align-items-center justify-content-between">
                     <div>
                         <span class="text-muted text-uppercase fw-semibold d-block" style="font-size: 0.68rem; letter-spacing: 0.5px;">Instalações</span>
                         <h3 class="fw-bold mb-0 mt-1" style="color: #0f2547;">{{ $totalInstallations }}</h3>
+                        <a href="{{ route('installations.index') }}" class="stretched-link"></a>
                     </div>
                     <div class="icon-shape-navy">
                         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-box-seam-fill" viewBox="0 0 16 16">
@@ -142,13 +144,14 @@
             </div>
         </div>
 
-        <!-- 5. Aposentações -->
+        {{-- Aposentações --}}
         <div class="col">
             <div class="card card-modern border-0 shadow-sm stat-card bg-white h-100">
                 <div class="card-body p-3 d-flex align-items-center justify-content-between">
                     <div>
                         <span class="text-muted text-uppercase fw-semibold d-block" style="font-size: 0.68rem; letter-spacing: 0.5px;">Aposentações</span>
                         <h3 class="fw-bold mb-0 mt-1" style="color: #0f2547;">{{ $totalRetirements ?? 0 }}</h3>
+                        <a href="{{ route('retirements.index') }}" class="stretched-link"></a>
                     </div>
                     <div class="icon-shape-navy">
                         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-archive-fill" viewBox="0 0 16 16">
@@ -159,13 +162,14 @@
             </div>
         </div>
 
-        <!-- 6. Relatórios -->
+        {{-- Relatórios --}}
         <div class="col">
             <div class="card card-modern border-0 shadow-sm stat-card bg-white h-100">
                 <div class="card-body p-3 d-flex align-items-center justify-content-between">
                     <div>
                         <span class="text-muted text-uppercase fw-semibold d-block" style="font-size: 0.68rem; letter-spacing: 0.5px;">Relatórios</span>
                         <h3 class="fw-bold mb-0 mt-1" style="color: #0f2547;">{{ $totalReports ?? 0 }}</h3>
+                        <a href="{{ route('reports.index') }}" class="stretched-link"></a>
                     </div>
                     <div class="icon-shape-navy">
                         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-file-earmark-bar-graph-fill" viewBox="0 0 16 16">
@@ -177,9 +181,9 @@
         </div>
     </div>
 
-    <!-- 3. CONTEÚDO PRINCIPAL (INFORMAÇÕES E RESUMO) -->
+    {{-- CONTEÚDO PRINCIPAL --}}
     <div class="row g-4">
-        <!-- Informações do Utilizador -->
+        {{-- Informações do Utilizador --}}
         <div class="col-lg-8">
             <div class="card card-modern shadow-sm border-0 bg-white h-100">
                 <div class="card-header bg-navy-header py-3 px-4 d-flex align-items-center justify-content-between">
@@ -230,7 +234,7 @@
             </div>
         </div>
 
-        <!-- Resumo do Sistema -->
+        {{-- Resumo do Sistema --}}
         <div class="col-lg-4">
             <div class="card card-modern shadow-sm border-0 bg-white h-100">
                 <div class="card-header bg-navy-header py-3 px-4">

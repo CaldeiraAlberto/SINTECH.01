@@ -6,7 +6,7 @@ use App\Models\User;
 use App\Models\Computer;
 use App\Models\Software;
 use App\Models\Installation;
-use App\Models\Retirement; // Importação do Model de Aposentações
+use App\Models\Retirement;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
@@ -19,7 +19,6 @@ class DashboardController extends Controller
         $user = Auth::user();
 
         if ($user->role === 'responsavel') {
-            
             // 1. Total de utilizadores no sistema
             $totalUsers = User::count();
 
@@ -46,26 +45,41 @@ class DashboardController extends Controller
                     $q->where('responsavel_id', $user->id);
                 })->count();
 
+            // 6. Instalações recentes para o responsável
+            $recentInstallations = Installation::with(['computer', 'software'])
+                ->where('responsavel_id', $user->id)
+                ->orWhereHas('computer', function ($q) use ($user) {
+                    $q->where('responsavel_id', $user->id);
+                })
+                ->latest('data_instalacao')
+                ->take(5)
+                ->get();
+
         } else {
-            
-            // Totais para a Administração (Help Desk)
+            // Totais gerais para Administração / Help Desk
             $totalUsers = User::count();
             $totalComputers = Computer::count();
             $totalSoftwares = Software::count();
             $totalInstallations = Installation::count();
-            $totalRetirements = Retirement::count(); // Contagem de todas as aposentações
+            $totalRetirements = Retirement::count();
+
+            $recentInstallations = Installation::with(['computer', 'software'])
+                ->latest('data_instalacao')
+                ->take(5)
+                ->get();
         }
 
         $totalReports = 0;
 
-        return view('dashboard.index', [
-            'user' => $user,
-            'totalUsers' => $totalUsers,
-            'totalComputers' => $totalComputers,
-            'totalSoftwares' => $totalSoftwares,
-            'totalInstallations' => $totalInstallations,
-            'totalRetirements' => $totalRetirements,
-            'totalReports' => $totalReports,
-        ]);
+        return view('dashboard.index', compact(
+            'user',
+            'totalUsers',
+            'totalComputers',
+            'totalSoftwares',
+            'totalInstallations',
+            'totalRetirements',
+            'totalReports',
+            'recentInstallations'
+        ));
     }
 }
