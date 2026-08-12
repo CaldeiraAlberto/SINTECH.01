@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 
 class UserController extends Controller
@@ -95,13 +96,13 @@ class UserController extends Controller
                 'required',
                 'string',
                 'max:30',
-                Rule::unique('users', 'numero_cracha'),
+                Rule::unique(User::class, 'numero_cracha'),
             ],
             'name'     => 'required|string|max:255',
             'email'    => [
                 'required',
                 'email',
-                Rule::unique('users', 'email'),
+                Rule::unique(User::class, 'email'),
             ],
             'password' => 'required|string|min:5',
             'role'     => 'required|in:helpdesk,responsavel',
@@ -111,7 +112,7 @@ class UserController extends Controller
             'numero_cracha' => $request->numero_cracha,
             'name'          => $request->name,
             'email'         => $request->email,
-            'password'      => $request->password,
+            'password'      => Hash::make($request->password),
             'role'          => $request->role,
             'ativo'         => true,
         ]);
@@ -142,13 +143,13 @@ class UserController extends Controller
                 'required',
                 'string',
                 'max:30',
-                Rule::unique('users', 'numero_cracha')->ignore($user->id),
+                Rule::unique(User::class, 'numero_cracha')->ignore($user->id),
             ],
             'name'  => 'required|string|max:255',
             'email' => [
                 'required',
                 'email',
-                Rule::unique('users', 'email')->ignore($user->id),
+                Rule::unique(User::class, 'email')->ignore($user->id),
             ],
             'role'  => 'required|in:helpdesk,responsavel',
             'ativo' => 'required|boolean',
@@ -161,7 +162,7 @@ class UserController extends Controller
         $user->ativo         = $request->ativo;
 
         if ($request->filled('password')) {
-            $user->password = $request->password;
+            $user->password = Hash::make($request->password);
         }
 
         $user->save();
@@ -211,7 +212,7 @@ class UserController extends Controller
     {
         $request->validate([
             'ids'   => 'required|array',
-            'ids.*' => 'exists:users,id',
+            'ids.*' => Rule::exists(User::class, 'id'),
         ], $this->messages());
 
         $ids = $request->input('ids');
