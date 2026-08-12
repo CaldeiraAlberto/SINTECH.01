@@ -10,6 +10,12 @@
         'resources/css/app.css',
         'resources/js/app.js'
     ])
+
+    <style>
+        .sidebar-hidden {
+            display: none !important;
+        }
+    </style>
 </head>
 
 <body class="bg-light">
@@ -23,8 +29,8 @@
             {{-- Menu Lateral --}}
             @include('components.sidebar')
 
-            {{-- Conteúdo Principal --}}
-            <main class="col-md-10 p-4">
+            {{-- Conteúdo Principal (usa 'col' para expandir automaticamente) --}}
+            <main id="main-content" class="col p-4">
 
                 @yield('content')
 
@@ -35,6 +41,20 @@
 
     {{-- Rodapé --}}
     @include('components.footer')
+
+    {{-- Script de Alternância da Sidebar --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const toggleBtn = document.getElementById('sidebarToggle');
+            const sidebar = document.getElementById('sidebar');
+
+            if (toggleBtn && sidebar) {
+                toggleBtn.addEventListener('click', function () {
+                    sidebar.classList.toggle('sidebar-hidden');
+                });
+            }
+        });
+    </script>
 
 </body>
 

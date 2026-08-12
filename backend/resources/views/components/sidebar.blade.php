@@ -1,4 +1,4 @@
-<aside class="col-md-3 col-lg-2 p-0 text-white min-vh-100 shadow-sm" style="background-color: #0f2547;">
+<aside id="sidebar" class="col-md-3 col-lg-2 p-0 text-white min-vh-100 shadow-sm" style="background-color: #0f2547;">
     <style>
         .sidebar-heading {
             font-size: 0.7rem;
