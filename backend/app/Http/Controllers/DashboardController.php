@@ -26,10 +26,12 @@ class DashboardController extends Controller
             $totalComputers = Computer::where('responsavel_id', $user->id)->count();
 
             // 3. Instalações nas máquinas do responsável
-            $totalInstallations = Installation::where('responsavel_id', $user->id)
-                ->orWhereHas('computer', function ($q) use ($user) {
-                    $q->where('responsavel_id', $user->id);
-                })->count();
+            $totalInstallations = Installation::where(function ($q) use ($user) {
+                $q->where('responsavel_id', $user->id)
+                  ->orWhereHas('computer', function ($c) use ($user) {
+                      $c->where('responsavel_id', $user->id);
+                  });
+            })->count();
 
             // 4. Softwares distintos instalados nas máquinas do responsável
             $totalSoftwares = Software::whereHas('installations', function ($q) use ($user) {
@@ -39,17 +41,18 @@ class DashboardController extends Controller
                   });
             })->distinct()->count();
 
-            // 5. Aposentações vinculadas ao responsável
-            $totalRetirements = Retirement::where('responsavel_id', $user->id)
-                ->orWhereHas('computer', function ($q) use ($user) {
-                    $q->where('responsavel_id', $user->id);
-                })->count();
+            // 5. Aposentações vinculadas aos computadores do responsável
+            $totalRetirements = Retirement::whereHas('computer', function ($q) use ($user) {
+                $q->where('responsavel_id', $user->id);
+            })->count();
 
             // 6. Instalações recentes para o responsável
             $recentInstallations = Installation::with(['computer', 'software'])
-                ->where('responsavel_id', $user->id)
-                ->orWhereHas('computer', function ($q) use ($user) {
-                    $q->where('responsavel_id', $user->id);
+                ->where(function ($q) use ($user) {
+                    $q->where('responsavel_id', $user->id)
+                      ->orWhereHas('computer', function ($c) use ($user) {
+                          $c->where('responsavel_id', $user->id);
+                      });
                 })
                 ->latest('data_instalacao')
                 ->take(5)
